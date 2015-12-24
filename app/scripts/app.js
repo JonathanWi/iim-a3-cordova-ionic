@@ -36,21 +36,10 @@ angular.module('Places', ['ionic', 'ngCordova', 'ngResource'])
       })
       .state('app.home', {
         url: '/home',
-        cache: true,
         views: {
           'viewContent': {
             templateUrl: 'templates/views/home.html',
             controller: 'HomeController'
-          }
-        }
-      })
-      .state('app.settings', {
-        url: '/settings',
-        cache: true,
-        views: {
-          'viewContent': {
-            templateUrl: 'templates/views/settings.html',
-            controller: 'SettingsController'
           }
         }
       });
