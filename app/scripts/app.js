@@ -34,19 +34,19 @@ angular.module('Places', ['ionic', 'ngCordova', 'ngResource'])
         templateUrl: 'templates/main.html',
         controller: 'MainController'
       })
-      .state('app.home', {
-        url: '/home',
+      .state('app.places', {
+        url: '/places',
         views: {
           'viewContent': {
-            templateUrl: 'templates/views/home.html',
-            controller: 'HomeController'
+            templateUrl: 'templates/views/places.html',
+            controller: 'PlacesController'
           }
         }
       });
 
 
     // redirects to default route for undefined routes
-    $urlRouterProvider.otherwise('/app/home');
+    $urlRouterProvider.otherwise('/app/places');
   });
 
 
