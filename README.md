@@ -144,7 +144,7 @@ Si tout s'est bien passé, vous devez voir votre photo s'afficher !
 
 ### 2. Enregistrer la photo en localstorage
 
-*Ressource nécessaire pour la question.*
+*Ressource nécessaire pour la question.*  
 https://github.com/gsklee/ngStorage
 
 ````
