@@ -25,7 +25,7 @@ Afin d'installer Genymotion, suivez les [instructions détaillées ici.](https:/
 Une fois Genymotion installé, installez et lancez le device virtuel suivant :  
 `Google Nexus 5 — 4.4.4 — API 19 — 1080 x 1920`
 
-### Cordova, Ionic & Android CLI
+### Cordova & Ionic 
 
 Avant toutes choses, nous allons installer `cordova`, `ionic` et `ios-deploy`.
 
@@ -40,23 +40,60 @@ $ npm install
 $ bower install
 ````
 
-// TODO: Ajouter installation android SDK
+### JAVA & Android SDK
 
-Une fois ces opérations terminées, nous allons pouvoir tester que tout fonctionne.
+Nous allons maintenant installer le Java Runtime Environment (JRE). Pour ce faire rendez vous sur http://www.oracle.com/technetwork/java/javase/downloads/jdk7-downloads-1880260.html et téléchargez le `Java SE Development Kit 7u79` pour votre `OS`.  
+Une fois téléchargé, lancez le `.dmg` sur Mac ou le `.exe` pour Windows.
+
+Installons maintenant le `SDK Android` qui nous permettra de build nos applications. Rendez- vous sur http://developer.android.com/sdk/index.html#Other et téléchargez le `SDK Tools Only` correspondant à votre `OS` (le `.exe` pour Windows, et le `.zip` pour Mac).
+
+**Uniquement sur Mac :**  
+Dézippez l'archive récupérée et déplacez le dossier `android-sdk-macosx` dans votre dossier `Documents`. Lancez ensuite le terminal est faites les commandes suivantes :
+
+````
+$ open -a TextEdit ~/.bash_profile
+````
+
+Dans le fichier nouvellement ouvert, ajoutez les lignes suivantes (en remplaçant `username` par le username de votre Mac) :
+
+````
+export ANDROID_HOME=/Users/username/Documents/android-sdk-macosx
+export PATH=$ANDROID_HOME/tools:$PATH
+````
+
+Sauvegardez et fermez le fichier puis, dans le terminal, lancez :
+
+````
+$ source ~/.bash_profile
+````
+**Fin de l'étape supplémentaire**
+
+
+
+###Pour vérifier que tout à fonctionné 
+
+lancez dans votre terminal la commande :
+
+````
+$ android
+````
+
+Si une fenêtre contenant différentes version d'Android (*ex : Android 6.0 (API 23)*), vous êtes presque au bout de vos peines : Ouvrez la liste sous `Android 5.1.1 (API22)` et selectionnez `SDK Platform`, `Intel x86 Atom_64 System Image` et `Intel x86 Atom System Image`. Clickez ensuite sur `Install 3 Packages` puis `Accept License` et finalement `Install`.
+
 
 ### Testing
 
 **Pour Android**
 
 *Phase d'initialisation*  
-Lancez les deux commandes suivantes :
+À la racine du dossier, lancez les deux commandes suivantes :
 
 ````
 $ gulp -b android
 $ cordova platform add android
 ````
 
-Afin de tester votre application - et avec votre téléphone Android branché ou l'émulateur Genymotion initialisé - faites ensuite :
+Afin de tester votre application - et avec votre téléphone Android branché ou le device Genymotion initialisé - faites ensuite :
 
 ````
 $ gulp -r android
@@ -65,7 +102,7 @@ $ gulp -r android
 **Pour iOS**
 
 *Phase d'initialisation*  
-Lancez les deux commandes suivantes :
+À la racine du dossier, lancez les deux commandes suivantes :
 
 ````
 $ gulp -b ios
