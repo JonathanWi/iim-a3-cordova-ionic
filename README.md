@@ -33,7 +33,7 @@ Avant toutes choses, nous allons installer `cordova`, `ionic` et `ios-deploy`.
 $ npm i -g cordova ionic ios-deploy
 ````
 
-Une fois le repo téléchargé, installons les dépendances grâce à  :
+Une fois le repo téléchargé, `cd` **à la racine** et installez les dépendances grâce à  :
 
 ````
 $ npm install
