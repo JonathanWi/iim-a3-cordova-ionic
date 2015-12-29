@@ -10,7 +10,7 @@
  */
 
 
-angular.module('Places', ['ionic', 'ngCordova', 'ngResource'])
+angular.module('Places', ['ionic', 'ngCordova', 'ngResource', 'ngStorage'])
 
   .run(function($ionicPlatform) {
 
