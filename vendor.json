@@ -4,5 +4,5 @@
     "bower_components/lodash/lodash.js",
     "bower_components/ngCordova/dist/ng-cordova.js",
     "bower_components/angular-timeago/dist/angular-timeago.js",
-    "bower_components/ngstorage/dist/ngStorage.js"
+    "bower_components/ngstorage/ngStorage.js"
 ]
