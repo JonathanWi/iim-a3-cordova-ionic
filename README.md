@@ -111,10 +111,12 @@ Dans le fichier `placesController.js`, injectez le service `Camera` et créez un
 ````
 $scope.addPlace = function() {
     Camera
-  	.getPicture()
+  	.getPicture({ quality: 50, destinationType: Camera.DestinationType.DATA_URL}) // Ceci représentent les options passées à la camera. Il est important de ne pas les modifier.
   	.then(function(imageURI) {
-  	    // imageURI contient la photo prise par l'APN
-  	    console.log(imageURI);
+  	    // imageURI contient la photo prise par l'APN en base64
+        var img = "data:image/jpeg;base64," imageURI; 
+
+        // Il est important de faire précéder la photo de son type (base64) afin de l'afficher plus tard.
   	});
 }
 ````
@@ -128,9 +130,10 @@ Dans la vue `places.html`, ajoutez le code suivant au sein du `ion-content` :
 
 ````
 <div class="list">
-    <a class="item item-thumbnail-left" href="#">
+    <a class="item item-thumbnail-left" ui-sref="#">
       <img ng-src="{{picture}}">
       <h2>Adresse</h2>
+      <p>Complément d'adresse</p>
       <p>Date</p>
     </a>
 </div>
@@ -142,90 +145,44 @@ Si tout s'est bien passé, vous devez voir votre photo s'afficher !
 ### 2. Enregistrer la photo en localstorage
 
 *Ressource nécessaire pour la question.*
-http://learn.ionicframework.com/formulas/localstorage/
-
-**2.1 Le service `$localstorage`**  
-Créez le fichier `LocalStorageService.js` sur le modèle de la ressource ci-dessus.
-
-**2.2 Injectez $localstorage**  
-Dans le `PlacesController`, injectez le service `$localstorage` nouvellement créé.
-
-*Avant de commencer les questions suivantes, veuillez lire le paragraphe ci-dessous pour comprendre comment localStorage fonctionne:*
-
-LocalStorage est une méthode de stockage locale très simple (de type `key` => `value`) nous permettant de ne pas utiliser de BDD distantes et de stocker directement les informations que l'on veut sur le device (Smartphone, mais aussi desktop, tablette...) de manière persistante.
-
-Un des "inconvenients" de cette méthode est que - à la différence d'une base de donnée - **il est nécessaire de ré-écrire l'objet à enregistrer à chaque changement (ajout, suppression, modification d'un element).**
-
-Pour mieux comprendre, regardez l'exemple ci dessous qui explique comment ajouter un élément à un array stocké en localStorage :
+https://github.com/gsklee/ngStorage
 
 ````
-// On récupère ce qui est stocké dans le localStorage
-var places = $localstorage.getObject('places');
-
-/*
-	Ici places = [
-		{img : '123.png'},
-		{img : '345.png'}
-	]
-*/
-
-// On ajoute un élément à l'array
-var newPlace = {img : imageURI};
-places.push(newPlace);
-
-// On ré-écrit l'objet places en localStorage
-$localstorage.setObject('places', places);
+Par soucis de simplicité, nous allons utiliser l'excellent `ngStorage` déjà inclu dans le projet. 
+`ngStorage` stocke les données en `localStorage`, ce qui a pour inconvenient d'être limité à 5Mo. Pour un projet de plus grande ampleur, privilégiez des technologies telles que sqlite ou pouchdb pour cordova.
 ````
 
-En résumé, si vous souhaitez modifier un élément créé en localStorage, vous devez :
-- Créer une variable intermediaire qui stockera la valeur de l'objet :
-````
-var places = $localstorage.getObject('places');
-````
+**2.1 Le service `$localStorage`**  
+Injectez `$localStorage` dans le `PlacesController` et definissez une variable `$scope.$storage` ayant pour valeur `$localStorage` et prenant comme `$default` : `places: []` 
 
-- Modifier cette variable pour refleter les changements que vous souhaitez effectuer :  
-````
-var newPlace = {img : imageURI};
-places.push(newPlace);
-````
 
-- Ré-écrire l'ancien objet avec la nouvelle valeur :
-````
-$localstorage.setObject('places', places);
-````
-
-**2.3 Enregistrer la (les) photos en localStorage**  
-Grâce à l'exemple donné ci-dessus, enregistrez la/les photos prisent par l'APN en `$localstorage` sur l'objet `places`, un array de type :
+**2.2 Enregistrer la (les) photos en localStorage**  
+Push les photos prisent par l'APN dans l'array `$scope.$storage.places` sous forme d'objet suivant le modèle suivant :
 
 ````
-var places = $localstorage.getObject('places');
-
-/*
-	places = [
-		{img : '123.png'},
-		{img : '345.png'}
-	]
-*/
+{img : '123.png'}
 ````
 
 *Si tout s'est bien passé, vous ne devriez plus voir de photo dans la vue*
 
-**2.4 Affichez les photos enregistrées**  
-À l'aider de `ng-repeat` et d'une variable `$scope.places` ayant pour valeur `places` enregistré en `$localstorage`, affichez les photos prisent avec l'APN.
+**2.3 Affichez les photos enregistrées**  
+À l'aider de `ng-repeat` et de la variable `$scope.$storage.$places`, affichez les photos prisent avec l'APN.
 
 *Bravo, vous avez créé votre première application appareil photo !*
 
-**2.5 Clean le localstorage**  
-Étant donné que nous allons régulièrement modifier les place afin de les enrichir de donnée, il est important que nous puissions vider notre `$localstorage` régulièrement. Pour ce faire, ajoutez le bouton suivant dans `places.html` avant le bouton `addPlace()`:
+**2.4 Clean le localstorage**  
+Étant donné que nous allons régulièrement modifier les place afin de les enrichir de donnée, il est important que nous puissions vider notre `$localStorage` régulièrement. Pour ce faire, ajoutez le bouton suivant dans `places.html` avant le bouton `addPlace()`:
 ````
 <ion-nav-buttons side="primary">
-      <button class="button button-icon icon ion-ios-minus-empty" on-tap="clearPlaces()"></button>
-    </ion-nav-buttons>
+  <button class="button button-icon icon ion-ios-minus-empty" on-tap="clearPlaces()"></button>
+</ion-nav-buttons>
 ````
-Il ne nous reste plus qu'à créer la fonction `$scope.clearPlaces()` dans le `PlacesController`. Cette fonction aura pour simple action de remplacer l'objet `places` stocké en `localStorage` par un array vide :
+Il ne nous reste plus qu'à créer la fonction `$scope.clearPlaces()` dans le `PlacesController`. Cette fonction aura pour simple action de remplacer l'objet `places` stocké en `$localStorage` par un array vide :
 
 ````
-$scope.places = $localstorage.setObject('places', []);
+$localStorage.$reset({
+  places: []
+});
 ````
 
 ### 3. Géolocaliser les photos
