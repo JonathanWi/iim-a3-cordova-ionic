@@ -3,8 +3,11 @@
 //http://stackoverflow.com/questions/14464945/add-queueing-to-angulars-http-service
 'use strict';
 
-angular.module('Places').factory('Geocoder', function ($localstorage, $q, $timeout) {
-  var locations = $localstorage.getObject('locations') ? $localstorage.getObject('locations') : {};
+angular.module('Places').factory('Geocoder', function ($localStorage, $q, $timeout) {
+
+  var $storage = $localStorage.$default({
+    locations : {}
+  });
 
   var queue = [];
 
@@ -33,8 +36,8 @@ var executeNext = function () {
 
       queue.shift();
 
-      locations[task.latlng] = geoaddress;
-      $localstorage.setObject('locations', geoaddress);
+      $storage.locations[task.latlng] = geoaddress;
+      $storage.locations = geoaddress;
 
       task.d.resolve(geoaddress);
 
@@ -72,9 +75,9 @@ return {
     var lat = parseFloat(lat);
     var lng = parseFloat(lng);
     var latlng = new google.maps.LatLng(lat, lng);
-    if (latlng in locations) {
+    if (latlng in $storage.locations) {
      $timeout(function () {
-       d.resolve(locations[latlng]);
+       d.resolve($storage.locations[latlng]);
      });
    } else {
     queue.push({
