@@ -226,6 +226,12 @@ $localStorage.$reset({
 
 Dans cette partie, nous allons Géolocaliser les photos prises à l'aide du GPS du device !
 
+Ajoutez le plugin de geolocalisation de cordova via :
+
+````
+$ cordova plugin add cordova-plugin-geolocation
+````
+
 **3.1 GeoLocation Service**  
 Commençons par créer le `GeoLocationService.js` en copiant le code ci-dessous :
 
