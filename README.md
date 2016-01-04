@@ -151,7 +151,7 @@ $scope.addPlace = function() {
   	.getPicture({ quality: 50, destinationType: Camera.DestinationType.DATA_URL}) // Ceci représentent les options passées à la camera. Il est important de ne pas les modifier.
   	.then(function(imageURI) {
   	    // imageURI contient la photo prise par l'APN en base64
-        var img = "data:image/jpeg;base64," imageURI; 
+        var img = "data:image/jpeg;base64," + imageURI; 
 
         // Il est important de faire précéder la photo de son type (base64) afin de l'afficher plus tard.
   	});
