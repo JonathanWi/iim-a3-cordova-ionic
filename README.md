@@ -218,7 +218,8 @@ Il ne nous reste plus qu'à créer la fonction `$scope.clearPlaces()` dans le `P
 
 ````
 $localStorage.$reset({
-  places: []
+  places: [],
+  locations : {} // Nécessaire pour la bonne execution de l'application
 });
 ````
 
@@ -321,7 +322,7 @@ https://github.com/yaru22/angular-timeago
 https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Objets_globaux/Date/now
 
 ```
-Par soucis de simplicité, la libriarie angular timeago est déjà inclue dans le projet.
+TimeAgo n'est pas inclus dans le projet, à vous de faire bower install ainsi que d'injecter le module dans le fichier app.js
 ```
 
 Ajoutez une `date` à l'objet `place`, et affichez là au format `timeAgo` à l'aide de `{{place.date | timeAgo}}`
