@@ -1,6 +1,6 @@
 # Places — Your favorite spots.
 
-Nous allons réaliser au cours de cette semaine une application vous permettant d'enregistrer localement vos lieux favoris très simplement (une simple photo), puis en extraire, le lieu et - pour les plus téméraires - nous ajouterons : 
+Nous allons réaliser au cours de cette semaine une application vous permettant d'enregistrer localement vos lieux favoris très simplement (une simple photo), puis en extraire, le lieu et - pour les plus téméraires - nous ajouterons :
 
 - Géolocalisation
 - Partage social (SMS, Facebook, Twitter...)
@@ -25,7 +25,7 @@ Afin d'installer Genymotion, suivez les [instructions détaillées ici.](https:/
 Une fois Genymotion installé, installez et lancez le device virtuel suivant :  
 `Google Nexus 5 — 4.4.4 — API 19 — 1080 x 1920`
 
-### Cordova & Ionic 
+### Cordova & Ionic
 
 Avant toutes choses, nous allons installer `cordova`, `ionic` et `ios-deploy`.
 
@@ -70,7 +70,7 @@ $ source ~/.bash_profile
 
 
 
-###Pour vérifier que tout à fonctionné 
+###Pour vérifier que tout à fonctionné
 
 lancez dans votre terminal la commande :
 
@@ -135,12 +135,45 @@ Tapez `about:inspect` comme url. Une fois votre application lancée, vous verrez
 ### 1. Prendre une photo
 
 *Ressource nécessaire pour cette partie.*  
-http://learn.ionicframework.com/formulas/cordova-camera/
+https://github.com/apache/cordova-plugin-camera
 
 Dans cette première partie, le but est d'afficher une photo prise avec l'APN de votre smartphone/Genymotion.
 
 **1.1 Créez le service `CameraService`**  
-Dans le fichier `CameraService.js` dans le dossier `services`, créez la fonction `getPicture()` identique à celle présente dans le lien fournit ci-dessus. 
+Dans le fichier `CameraService.js` dans le dossier `services`, créez la fonction `getPicture()` identique à celle présente ci-dessous.
+
+````
+'use strict';
+
+/**
+ * @ngdoc function
+ * @name Places.service:CameraService
+ * @description
+ * # CameraService
+ */
+ angular.module('Places')
+  	// use
+.factory('Camera', ['$q', function($q) {
+	return {
+		getPicture: function() {
+			var q = $q.defer();
+
+			navigator.camera.getPicture(function(result) {
+	        // Do any magic you need
+	        q.resolve(result);
+	    }, function(err) {
+	    	q.reject(err);
+	    }, { quality: 50, destinationType: Camera.DestinationType.DATA_URL});
+
+			return q.promise;
+		}
+	}
+}]);
+````
+
+*Pensez bien à installer le plugin camera de cordova grâce à la commande ci-dessous*
+
+`$ cordova plugin add cordova-plugin-camera`
 
 **1.2 Injection dans le `placesController`**  
 Dans le fichier `placesController.js`, injectez le service `Camera` et créez une fonction `$scope.addPlace` de type :
@@ -148,10 +181,10 @@ Dans le fichier `placesController.js`, injectez le service `Camera` et créez un
 ````
 $scope.addPlace = function() {
     Camera
-  	.getPicture({ quality: 50, destinationType: Camera.DestinationType.DATA_URL}) // Ceci représentent les options passées à la camera. Il est important de ne pas les modifier.
+  	.getPicture() // Ceci représentent les options passées à la camera. Il est important de ne pas les modifier.
   	.then(function(imageURI) {
   	    // imageURI contient la photo prise par l'APN en base64
-        var img = "data:image/jpeg;base64," + imageURI; 
+        var img = "data:image/jpeg;base64," + imageURI;
 
         // Il est important de faire précéder la photo de son type (base64) afin de l'afficher plus tard.
   	});
@@ -185,12 +218,12 @@ Si tout s'est bien passé, vous devez voir votre photo s'afficher !
 https://github.com/gsklee/ngStorage
 
 ````
-Par soucis de simplicité, nous allons utiliser l'excellent `ngStorage` déjà inclu dans le projet. 
+Par soucis de simplicité, nous allons utiliser l'excellent `ngStorage` déjà inclu dans le projet.
 `ngStorage` stocke les données en `localStorage`, ce qui a pour inconvenient d'être limité à 5Mo. Pour un projet de plus grande ampleur, privilégiez des technologies telles que sqlite ou pouchdb pour cordova.
 ````
 
 **2.1 Le service `$localStorage`**  
-Injectez `$localStorage` dans le `PlacesController` et definissez une variable `$scope.$storage` ayant pour valeur `$localStorage` et prenant comme `$default` : `places: []` 
+Injectez `$localStorage` dans le `PlacesController` et definissez une variable `$scope.$storage` ayant pour valeur `$localStorage` et prenant comme `$default` : `places: []`
 
 
 **2.2 Enregistrer la (les) photos en localStorage**  
@@ -246,7 +279,7 @@ Commençons par créer le `GeoLocationService.js` en copiant le code ci-dessous 
  * # GeoLocation
  */
 angular.module('Places')
-  // use 
+  // use
   .factory('GeoLocation', ['$q', function($q) {
   	return {
   		getCurrentPosition: function() {
@@ -307,7 +340,7 @@ Le `Geocoder` retourne un objet addresse visible dans votre console. Analysez le
     long : 8.04,
     street : "Rue de Courcelles",
     city : "75017 Paris",
-    country : "France" 
+    country : "France"
 }
 ````
 
@@ -352,7 +385,7 @@ Les questions suivantes représentent des améliorations possibles de l'applicat
 # Pour aller plus loin
 
 ### 7. La page détail  
-Faites en sorte que le `tap` sur un élément redirige vers une nouvelle page `places/:id` (avec `id` l'index de la `place`). 
+Faites en sorte que le `tap` sur un élément redirige vers une nouvelle page `places/:id` (avec `id` l'index de la `place`). Pour cette question, vous aurez besoin de lire la documentation de ui-router - déjà inclus dans le projet (https://github.com/angular-ui/ui-router) et de comprendre `ui-sref`, et `$stateParams`.
 
 ### 8. Temps de trajet et distance
 Sur cette nouvelle page, et grâce à l'API Google Maps (https://developers.google.com/maps/documentation/directions/intro#DirectionsRequests) affichez le chemin et le temps de trajet nécessaire pour se rendre à l'endroit selectionné depuis notre position.
@@ -361,7 +394,7 @@ Sur cette nouvelle page, et grâce à l'API Google Maps (https://developers.goog
 Toujours grâce à l'API google maps, affichez le chemin le plus cours en transport pour se rendre à l'endroit voulu!
 
 ### 10. Plus d'informations
-Ajoutez la possibilité d'editer la `place` selectioné et de l'enrichir des informations suivantes : 
+Ajoutez la possibilité d'editer la `place` selectioné et de l'enrichir des informations suivantes :
 - Nom du lieu
 - Type d'endroit (restaurant, bar, musée...)
 - Note (entre 0 et 5 étoiles)
@@ -370,7 +403,5 @@ Ajoutez la possibilité d'editer la `place` selectioné et de l'enrichir des inf
 ### 11. Filtrer la liste
 À l'aide d'un `modal` (http://ionicframework.com/docs/api/service/$ionicModal/), créez un système de filtre permetant de trier par type d'element, note, nom etc...
 
-Si vous êtes arrivés jusque là, vous avez bien merité un peu de repos : 
+Si vous êtes arrivés jusque là, vous avez bien merité un peu de repos :
 http://candies.aniwey.net/
-
-
