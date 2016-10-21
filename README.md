@@ -284,7 +284,7 @@ angular.module('Places')
   	return {
   		getCurrentPosition: function() {
   			var q = $q.defer();
-  			navigator.geolocation .getCurrentPosition(function (position) {
+  			navigator.geolocation.getCurrentPosition(function (position) {
 	        q.resolve(position);
 	    }, function(err) {
 	    	q.reject(err);
